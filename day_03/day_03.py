@@ -8,7 +8,8 @@ def calc_part1(input_file):
     with open(input_file) as f:
         for line in f.read().splitlines():
             half = len(line) // 2
-            duplicates = set(e for e in line[:half] if e in line[half:])
+            # duplicates = set(e for e in line[:half] if e in line[half:])
+            duplicates = set(line[:half]) & set(line[half:])
             shared_items.extend(duplicates)
     return sum(letter_to_num(e) for e in shared_items)
 
@@ -17,7 +18,7 @@ def calc_part2(input_file):
     shared_items = []
     with open(input_file) as f:
         for group in zip(*(iter(f.read().splitlines()),) * 3):
-            duplicates = set(e for e in group[0] if e in group[1] and e in e in group[2])
+            duplicates = set(group[0]) & set(group[1]) & set(group[2])
             shared_items.extend(duplicates)
     return sum(letter_to_num(e) for e in shared_items)
 
