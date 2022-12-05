@@ -1,4 +1,4 @@
-# https://adventofcode.com/2022/day/3
+# https://adventofcode.com/2022/day/4
 
 def has_full_overlap(f1, l1, f2, l2):
     f1, l1, f2, l2 = int(f1), int(l1), int(f2), int(l2)
