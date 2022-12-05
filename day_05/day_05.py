@@ -2,13 +2,13 @@
 
 
 def create_stacks(stack_lines):
-    stack_lines = reversed(stack_lines.split('\n'))
-    stacks_count = len(next(stack_lines).split('   '))
+    reversed_stack = reversed(stack_lines)
+    stacks_count = len(next(reversed_stack).split('   '))
     print(stacks_count)
     stacks = {}
     for i in range(0, stacks_count):
         stacks[i + 1] = []
-    for row in stack_lines:
+    for row in reversed_stack:
         crates = [row[i + 1:i + 2] for i in range(0, len(row), 4)]
         for i in range(0, len(crates)):
             if crates[i].strip():
@@ -19,23 +19,22 @@ def create_stacks(stack_lines):
 
 def calc_part1(input_file):
     with open(input_file) as f:
-        stack_lines, movements_lines = f.read().split("\n\n")
+        stack_lines, movements_lines = [parts.split("\n") for parts in f.read().split("\n\n")]
         stacks = create_stacks(stack_lines)
-        for movements in movements_lines.split('\n'):
+        for movements in movements_lines:
             if movements:
                 _, count, _, from_stack, _, to_stack = movements.split(' ')
                 for i in range(0, int(count)):
                     stacks[int(to_stack)].append(stacks[int(from_stack)].pop())
-
         print(stacks)
         return ''.join([stacks[i].pop() for i in stacks])
 
 
 def calc_part2(input_file):
     with open(input_file) as f:
-        stack_lines, movements_lines = f.read().split("\n\n")
+        stack_lines, movements_lines = [parts.split("\n") for parts in f.read().split("\n\n")]
         stacks = create_stacks(stack_lines)
-        for movements in movements_lines.split('\n'):
+        for movements in movements_lines:
             if movements:
                 _, count, _, from_stack, _, to_stack = movements.split(' ')
                 for i in range(int(count), 0, -1):
