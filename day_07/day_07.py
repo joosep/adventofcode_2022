@@ -1,38 +1,37 @@
 # https://adventofcode.com/2022/day/7
 
 
-def calc_dir_sizes(f, path=None):
-    directories = {}
-    size = 0
+def calc_dir_size(f, dir_path=None):
+    dirs, dir_size = {}, 0
     for line in f:
         parts = line.strip().split(" ")
         if parts[0] == "$" and parts[1] == "cd":
             dir_name = parts[2]
             if dir_name == "..":
-                directories[path] = size
-                return directories, size
-            subdirectories, dir_size = calc_dir_sizes(f, path + dir_name + "/" if path else dir_name)
-            directories |= subdirectories
-            size += dir_size
+                dirs[dir_path] = dir_size
+                return dirs, dir_size
+            subdirs, subdirs_size = calc_dir_size(f, dir_path + dir_name + "/" if dir_path else dir_name)
+            dirs |= subdirs
+            dir_size += subdirs_size
         elif parts[0].isnumeric():
-            size += int(parts[0])
-        if path:
-            directories[path] = size
-    return directories, size
+            dir_size += int(parts[0])
+        if dir_path:
+            dirs[dir_path] = dir_size
+    return dirs, dir_size
 
 
 def get_part1(data):
-    directories, _ = calc_dir_sizes(open(data))
-    print(directories)
-    return sum(v for v in directories.values() if v <= 100000)
+    dirs, _ = calc_dir_size(open(data))
+    print(dirs)
+    return sum(v for v in dirs.values() if v <= 100000)
 
 
 def get_part2(data):
-    directories, size = calc_dir_sizes(open(data))
+    dirs, size = calc_dir_size(open(data))
     need_to_delete = 30000000 - (70000000 - size)
     print(f'need to delete: {need_to_delete}')
-    print(directories)
-    return min(v for v in directories.values() if v >= need_to_delete)
+    print(dirs)
+    return min(v for v in dirs.values() if v >= need_to_delete)
 
 
 assert get_part1("test_data") == 95437
