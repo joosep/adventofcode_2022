@@ -9,13 +9,14 @@ def calc_dir_size(f, path, directories):
             dir_name = parts[2]
             if dir_name == "..":
                 directories[path] = size
-                return path, size
-            _, dir_size = calc_dir_size(f, path + dir_name + "/", directories)
+                return size
+            dir_size = calc_dir_size(f, path + dir_name + "/", directories)
             size += dir_size
         elif parts[0].isnumeric():
             size += int(parts[0])
-    directories[path] = size
-    return path, size
+    if path != "":
+        directories[path] = size
+    return size
 
 
 def get_part1(data):
