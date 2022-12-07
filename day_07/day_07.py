@@ -12,7 +12,7 @@ def calc_dir_sizes(f, path=None):
                 directories[path] = size
                 return directories, size
             subdirectories, dir_size = calc_dir_sizes(f, path + dir_name + "/" if path else dir_name)
-            directories = directories | subdirectories
+            directories |= subdirectories
             size += dir_size
         elif parts[0].isnumeric():
             size += int(parts[0])
