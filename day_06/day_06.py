@@ -1,3 +1,5 @@
+# https://adventofcode.com/2022/day/6
+
 def get_match_index(l, length=4):
     for i in range(0, len(l)):
         marker = set(l[i + j] for j in range(0, length))
