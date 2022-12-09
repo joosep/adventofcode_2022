@@ -2,47 +2,42 @@
 
 X, Y, HEAD = 0, 1, 0
 
+MOVES = {"R": [1, 0], "L": [-1, 0], "U": [0, 1], "D": [0, -1]}
+
 
 def find_tail_positions_count(data, knots_count):
     knots = [[0, 0] for _ in range(0, knots_count)]
     tail_positions = set()
     for direction, count in map(lambda line: line.split(), open(data).read().splitlines()):
-        move_knots(direction, int(count), knots, tail_positions)
+        move_knots(MOVES[direction], int(count), knots, tail_positions)
     print_movements(knots, tail_positions)
     return len(tail_positions)
 
 
-def move_knots(direction, count, knots, tail_positions):
+def move_knots(move, count, knots, tail_positions):
     for i in range(0, count):
-        if direction == "R":
-            knots[HEAD][X] += 1
-        elif direction == "L":
-            knots[HEAD][X] -= 1
-        elif direction == "U":
-            knots[HEAD][Y] += 1
-        elif direction == "D":
-            knots[HEAD][Y] -= 1
+        knots[HEAD] = apply_move(knots[HEAD], move)
         for tail_ndx in range(1, len(knots)):
             move_knot(knots, tail_ndx)
             collect_tail_position(knots, tail_positions)
 
 
 def move_knot(knots, knot_ndx):
-    head_knot = knots[knot_ndx - 1]
-    move_x, move_y = 0, 0
-    dist_x = head_knot[X] - knots[knot_ndx][X]
-    dist_y = head_knot[Y] - knots[knot_ndx][Y]
+    head_knot, knot = knots[knot_ndx - 1], knots[knot_ndx]
+    move = [0, 0]
+    dist_x = head_knot[X] - knot[X]
+    dist_y = head_knot[Y] - knot[Y]
     if abs(dist_x) > 1 and abs(dist_y) > 1:
-        move_x = dist_x // 2
-        move_y = dist_y // 2
+        move = [dist_x // 2, dist_y // 2]
     elif abs(dist_x) > 1:
-        move_x = dist_x // 2
-        move_y = dist_y
+        move = [dist_x // 2, dist_y]
     elif abs(dist_y) > 1:
-        move_x = dist_x
-        move_y = dist_y // 2
-    knots[knot_ndx][X] += move_x
-    knots[knot_ndx][Y] += move_y
+        move = [dist_x, dist_y // 2]
+    knots[knot_ndx] = apply_move(knot, move)
+
+
+def apply_move(knot, move):
+    return [knot[X] + move[X], knot[Y] + move[Y]]
 
 
 def collect_tail_position(knots, tail_positions):
@@ -64,8 +59,7 @@ def print_movements(knots, tail_positions):
         for x in range(min_x, max_x + 1):
             value = [x, y]
             if value in knots:
-                num = knots.index(value)
-                print(num, end=' ')
+                print(knots.index(value), end=' ')
             elif f'{x} {y}' in tail_positions:
                 print('#', end=' ')
             elif x == y == 0:
