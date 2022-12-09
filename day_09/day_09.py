@@ -46,14 +46,10 @@ def collect_tail_position(knots, tail_positions):
 
 
 def print_movements(knots, tail_positions):
-    min_x = min(int(pos) for pos in map(lambda a: a.split()[X], tail_positions))
-    min_x = min(min_x, min(pos[X] for pos in knots))
-    min_y = min(int(pos) for pos in map(lambda a: a.split()[Y], tail_positions))
-    min_y = min(min_y, min(pos[Y] for pos in knots))
-    max_x = max(int(pos) for pos in map(lambda a: a.split()[X], tail_positions))
-    max_x = max(max_x, max(pos[X] for pos in knots))
-    max_y = max(int(pos) for pos in map(lambda a: a.split()[Y], tail_positions))
-    max_y = max(max_y, max(pos[Y] for pos in knots))
+    min_x = min(min(int(pos) for pos in map(lambda a: a.split()[X], tail_positions)), min(pos[X] for pos in knots))
+    min_y = min(min(int(pos) for pos in map(lambda a: a.split()[Y], tail_positions)), min(pos[Y] for pos in knots))
+    max_x = max(max(int(pos) for pos in map(lambda a: a.split()[X], tail_positions)), max(pos[X] for pos in knots))
+    max_y = max(max(int(pos) for pos in map(lambda a: a.split()[Y], tail_positions)), max(pos[Y] for pos in knots))
     print()
     for y in range(max_y, min_y - 1, -1):
         for x in range(min_x, max_x + 1):
