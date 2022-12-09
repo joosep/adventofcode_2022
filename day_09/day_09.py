@@ -6,8 +6,7 @@ MOVES = {"R": [1, 0], "L": [-1, 0], "U": [0, 1], "D": [0, -1]}
 
 
 def find_tail_positions_count(data, knots_count):
-    knots = [[0, 0] for _ in range(0, knots_count)]
-    tail_positions = set()
+    knots, tail_positions = [[0, 0] for _ in range(0, knots_count)], set()
     for direction, count in map(lambda line: line.split(), open(data).read().splitlines()):
         move_knots(MOVES[direction], int(count), knots, tail_positions)
     print_movements(knots, tail_positions)
@@ -23,16 +22,14 @@ def move_knots(move, count, knots, tail_positions):
 
 
 def move_knot(knots, knot_ndx):
-    head_knot, knot = knots[knot_ndx - 1], knots[knot_ndx]
-    move = [0, 0]
-    dist_x = head_knot[X] - knot[X]
-    dist_y = head_knot[Y] - knot[Y]
-    if abs(dist_x) > 1 and abs(dist_y) > 1:
-        move = [dist_x // 2, dist_y // 2]
-    elif abs(dist_x) > 1:
-        move = [dist_x // 2, dist_y]
-    elif abs(dist_y) > 1:
-        move = [dist_x, dist_y // 2]
+    head_knot, knot, move = knots[knot_ndx - 1], knots[knot_ndx], [0, 0]
+    dist = [head_knot[X] - knot[X], head_knot[Y] - knot[Y]]
+    if abs(dist[X]) > 1 and abs(dist[Y]) > 1:
+        move = [dist[X] // 2, dist[Y] // 2]
+    elif abs(dist[X]) > 1:
+        move = [dist[X] // 2, dist[Y]]
+    elif abs(dist[Y]) > 1:
+        move = [dist[X], dist[Y] // 2]
     knots[knot_ndx] = apply_move(knot, move)
 
 
@@ -53,9 +50,8 @@ def print_movements(knots, tail_positions):
     print()
     for y in range(max_y, min_y - 1, -1):
         for x in range(min_x, max_x + 1):
-            value = [x, y]
-            if value in knots:
-                print(knots.index(value), end=' ')
+            if [x, y] in knots:
+                print(knots.index([x, y]), end=' ')
             elif f'{x} {y}' in tail_positions:
                 print('#', end=' ')
             elif x == y == 0:
