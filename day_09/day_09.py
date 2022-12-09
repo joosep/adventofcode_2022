@@ -13,7 +13,7 @@ def find_tail_positions_count(data, knots_count):
 
 
 def move_knots(direction, count, knots, tail_positions):
-    for i in range(0, int(count)):
+    for i in range(0, count):
         if direction == "R":
             knots[HEAD][X] += 1
         elif direction == "L":
@@ -51,13 +51,13 @@ def collect_tail_position(knots, tail_positions):
 
 
 def print_movements(knots, tail_positions):
-    min_x = min(int(pos) for pos in map(lambda x: x.split()[X], tail_positions))
+    min_x = min(int(pos) for pos in map(lambda a: a.split()[X], tail_positions))
     min_x = min(min_x, min(pos[X] for pos in knots))
-    min_y = min(int(pos) for pos in map(lambda x: x.split()[Y], tail_positions))
+    min_y = min(int(pos) for pos in map(lambda a: a.split()[Y], tail_positions))
     min_y = min(min_y, min(pos[Y] for pos in knots))
-    max_x = max(int(pos) for pos in map(lambda x: x.split()[X], tail_positions))
+    max_x = max(int(pos) for pos in map(lambda a: a.split()[X], tail_positions))
     max_x = max(max_x, max(pos[X] for pos in knots))
-    max_y = max(int(pos) for pos in map(lambda x: x.split()[Y], tail_positions))
+    max_y = max(int(pos) for pos in map(lambda a: a.split()[Y], tail_positions))
     max_y = max(max_y, max(pos[Y] for pos in knots))
     print()
     for y in range(max_y, min_y - 1, -1):
