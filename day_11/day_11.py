@@ -38,11 +38,6 @@ def calc_worry_level(item, num1, op, num2, mod_product=None):
         return worry // 3
 
 
-def calc_worry_level_part2(item, num1, op, num2, mod_product):
-    num1, num2 = get_num(item, num1), get_num(item, num2)
-    return ((num1 * num2) if op == "*" else (num1 + num2)) % mod_product
-
-
 def get_num(item, num):
     return item if num == 'old' else int(num)
 
