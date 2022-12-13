@@ -1,15 +1,11 @@
 # https://adventofcode.com/2022/day/12
 
-
-def read_input(data):
-    return [[ord(c) for c in row] for row in open(data).read().splitlines()]
-
-
 START = ord('S')
 END = ord('E')
 
 
-def find_shortest_path(matrix, forward=True):
+def find_shortest_path(data, forward=True):
+    matrix = read_input(data)
     starting_coords = find_starting_coords(matrix, START if forward else END)
     end_value = END if forward else ord('a')
     visited = [starting_coords]
@@ -25,6 +21,10 @@ def find_shortest_path(matrix, forward=True):
                     and is_height_ok(matrix, current_coords, new_coords, forward):
                 traj_length.append((new_coords, count + 1))
                 visited.append(new_coords)
+
+
+def read_input(data):
+    return [[ord(c) for c in row] for row in open(data).read().splitlines()]
 
 
 def find_starting_coords(matrix, starting_value):
@@ -53,13 +53,11 @@ def fix_s_and_e_values(height):
 
 
 def get_part1(data):
-    matrix = read_input(data)
-    return find_shortest_path(matrix)
+    return find_shortest_path(data)
 
 
 def get_part2(data):
-    matrix = read_input(data)
-    return find_shortest_path(matrix, forward=False)
+    return find_shortest_path(data, forward=False)
 
 
 result = get_part1("test_data")
