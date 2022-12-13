@@ -4,10 +4,10 @@ START = ord('S')
 END = ord('E')
 
 
-def find_shortest_path(data, forward=True):
+def find_shortest_path(data, move_uphill=True):
     matrix = read_input(data)
-    starting_coords = find_starting_coords(matrix, START if forward else END)
-    end_value = END if forward else ord('a')
+    starting_coords = find_starting_coords(matrix, START if move_uphill else END)
+    end_value = END if move_uphill else ord('a')
     visited = [starting_coords]
     traj_length = [(starting_coords, 0)]
     while traj_length:
@@ -18,7 +18,7 @@ def find_shortest_path(data, forward=True):
             new_coords = tuple(map(sum, zip(current_coords, adjacent)))
             if is_inside_borders(matrix, new_coords) \
                     and new_coords not in visited \
-                    and is_height_ok(matrix, current_coords, new_coords, forward):
+                    and is_height_ok(matrix, current_coords, new_coords, move_uphill):
                 traj_length.append((new_coords, count + 1))
                 visited.append(new_coords)
 
@@ -42,10 +42,10 @@ def is_inside_borders(matrix, coords):
     return 0 <= coords[0] < len(matrix) and 0 <= coords[1] < len(matrix[coords[0]])
 
 
-def is_height_ok(matrix, current_coords, new_coords, forward):
+def is_height_ok(matrix, current_coords, new_coords, move_uphill):
     current_height = fix_s_and_e_values(get_value(matrix, current_coords))
     new_height = fix_s_and_e_values(get_value(matrix, new_coords))
-    return new_height - current_height <= 1 if forward else current_height - new_height <= 1
+    return new_height - current_height <= 1 if move_uphill else current_height - new_height <= 1
 
 
 def fix_s_and_e_values(height):
@@ -57,7 +57,7 @@ def get_part1(data):
 
 
 def get_part2(data):
-    return find_shortest_path(data, forward=False)
+    return find_shortest_path(data, move_uphill=False)
 
 
 result = get_part1("test_data")
