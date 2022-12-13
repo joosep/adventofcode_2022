@@ -35,9 +35,8 @@ def get_part1(data):
 
 
 def get_part2(data):
-    packages = [list for t in read_input(data) for list in t]
-    packages.append([[2]])
-    packages.append([[6]])
+    packages = [l for t in read_input(data) for l in t]
+    packages.extend([[[2]], [[6]]])
     packages = sorted(packages, key=cmp_to_key(compare_lists))
     decode_key = 1
     for i in range(0, len(packages)):
