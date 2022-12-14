@@ -76,9 +76,9 @@ def move_sand(matrix, sand_coords):
         if one_down_and_left not in matrix:
             return one_down_and_left
         else:
-            one_down_one_left = sand_coords[0] + 1, sand_coords[1] + 1
-            if one_down_one_left not in matrix:
-                return one_down_one_left
+            one_down_and_right = sand_coords[0] + 1, sand_coords[1] + 1
+            if one_down_and_right not in matrix:
+                return one_down_and_right
             else:
                 return sand_coords
 
