@@ -33,22 +33,45 @@ def get_missing_beacon(data, max_distance):
             return x + 1, y
 
 
-def get_num(string):
-    return int(string.split('=')[1])
-
-
 def get_tuning_frequence(data, max_distance):
     x, y = get_missing_beacon(data, max_distance)
     return x * 4000000 + y
 
 
-def print_matrix(matrix, min_loc, max_loc):
-    for y in range(min_loc[1], max_loc[1] + 1):
-        for x in range(min_loc[0], max_loc[0] + 1):
+def get_num(string):
+    return int(string.split('=')[1])
+
+
+def print_matrix(data, max_range=None):
+    matrix = {}
+    max_x, min_x, max_y, min_y = 0, 2 ** 63 - 1, 0, 2 ** 63 - 1
+    for line in [line.replace(",", "").replace(":", "").split() for line in open(data).read().splitlines()]:
+        sensor = get_num(line[2]), get_num(line[3])
+        beacon = get_num(line[8]), get_num(line[9])
+        matrix[sensor] = "S"
+        matrix[beacon] = "B"
+        min_x, max_x = min(min_x, beacon[0], sensor[0]), max(max_x, beacon[0], sensor[0]),
+        min_y, max_y = min(min_y, beacon[1], sensor[1]), max(max_y, beacon[1], sensor[1])
+        distance = get_distance(sensor, beacon)
+        for x in range(sensor[0] - distance, sensor[0] + distance + 1):
+            for y in range(sensor[1] - distance, sensor[1] + distance):
+                empty = x, y
+                if get_distance(sensor, empty) <= distance:
+                    matrix[empty] = "#" if empty not in matrix else matrix[empty]
+                    min_x, max_x = min(min_x, x), max(max_x, x)
+                    min_y, max_y = min(min_y, y), max(max_y, y)
+    if max_range:
+        max_x, min_x, max_y, min_y = max_range, 0, max_range, 0
+    for y in range(min_y, max_y + 1):
+        for x in range(min_x, max_x + 1):
             value = matrix[(x, y)] if (x, y) in matrix else "."
             print(value, end='')
         print()
     print()
+
+
+def get_distance(loc1, loc2):
+    return abs(loc1[0] - loc2[0]) + abs(loc1[1] - loc2[1])
 
 
 def get_part1(data, y_coord):
@@ -58,6 +81,9 @@ def get_part1(data, y_coord):
 def get_part2(data, max_distance):
     return get_tuning_frequence(data, max_distance)
 
+
+print_matrix("test_data")
+print_matrix("test_data", 20)
 
 result = get_part1("test_data", 10)
 assert result == 26, f"got: {result}"
