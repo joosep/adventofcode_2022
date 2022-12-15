@@ -14,39 +14,39 @@ def read_data(data, has_bottom=False):
                         matrix[(cur_x, cur_y)] = "#"
             last_x, last_y = x, y
     if has_bottom:
-        length = max((max_x - min_x) // 2, max_y + 2)
-        max_x, min_x, max_y = 500 + length, 500 - length, max_y + 2
+        bottom_length = max((max_x - min_x) // 2, max_y + 2)
+        max_x, min_x, max_y = 500 + bottom_length, 500 - bottom_length, max_y + 2
         for i in range(min_x, max_x + 1):
             matrix[(i, max_y)] = "#"
     return matrix, (min_x, min_y), (max_x, max_y)
 
 
-def print_matrix(matrix, min_coord, max_coord):
-    for y in range(min_coord[1], max_coord[1] + 1):
-        for x in range(min_coord[0], max_coord[0] + 1):
+def print_matrix(matrix, min_loc, max_loc):
+    for y in range(min_loc[1], max_loc[1] + 1):
+        for x in range(min_loc[0], max_loc[0] + 1):
             value = matrix[(x, y)] if (x, y) in matrix else "."
             print(value, end='')
         print()
     print()
 
 
-def fill_with_sand(matrix, min_coord, max_coord):
-    starting_coord = 500, 0
-    sand_coords = starting_coord
+def fill_with_sand(matrix, min_loc, max_loc):
+    starting_loc = 500, 0
+    sand_loc = starting_loc
     sand_counter = 0
     while True:
-        new_sand_coords = move_sand(matrix, *sand_coords)
-        if not min_coord[0] <= new_sand_coords[0] <= max_coord[0] or \
-                not min_coord[1] <= new_sand_coords[1] <= max_coord[1]:
+        new_sand_loc = move_sand(matrix, *sand_loc)
+        if not min_loc[0] <= new_sand_loc[0] <= max_loc[0] or \
+                not min_loc[1] <= new_sand_loc[1] <= max_loc[1]:
             return sand_counter
-        if sand_coords == new_sand_coords:
+        if sand_loc == new_sand_loc:
             sand_counter += 1
-            matrix[new_sand_coords] = "o"
-            if new_sand_coords == starting_coord:
+            matrix[new_sand_loc] = "o"
+            if new_sand_loc == starting_loc:
                 return sand_counter
-            sand_coords = starting_coord
+            sand_loc = starting_loc
         else:
-            sand_coords = new_sand_coords
+            sand_loc = new_sand_loc
 
 
 def move_sand(matrix, x, y):
@@ -66,10 +66,10 @@ def move_sand(matrix, x, y):
 
 
 def get_part1(data):
-    matrix, min_coord, max_coord = read_data(data)
-    print_matrix(matrix, min_coord, max_coord)
-    counter = fill_with_sand(matrix, min_coord, max_coord)
-    print_matrix(matrix, min_coord, max_coord)
+    matrix, min_loc, max_loc = read_data(data)
+    print_matrix(matrix, min_loc, max_loc)
+    counter = fill_with_sand(matrix, min_loc, max_loc)
+    print_matrix(matrix, min_loc, max_loc)
     return counter
 
 
