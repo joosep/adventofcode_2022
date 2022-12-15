@@ -4,20 +4,15 @@ def read_data(data, has_bottom=False):
     matrix = {}
     max_x, min_x, max_y, min_y = 0, 2 ** 63 - 1, 0, 0
     for line in open(data).read().splitlines():
-        last_x = None
-        last_y = None
+        last_x, last_y = None, None
         line = line.replace("-", "").replace(" ", "")
         for x, y in [map(int, coords.split(',')) for coords in line.split(">")]:
-            max_x = max_x if max_x > x else x
-            max_y = max_y if max_y > y else y
-            min_x = min_x if min_x < x else x
-            min_y = min_y if min_y < y else y
+            max_x, max_y, min_x, min_y = max(max_x, x), max(max_y, y), min(min_x, x), min(min_y, y)
             if last_x is not None:
                 for cur_x in range(min(last_x, x), max(last_x, x) + 1):
                     for cur_y in range(min(last_y, y), max(last_y, y) + 1):
                         matrix[(cur_x, cur_y)] = "#"
-            last_x = x
-            last_y = y
+            last_x, last_y = x, y
     if has_bottom:
         length = max((max_x - min_x) // 2, max_y + 2)
         max_x, min_x, max_y = 500 + length, 500 - length, max_y + 2
@@ -40,7 +35,7 @@ def fill_with_sand(matrix, min_coord, max_coord):
     sand_coords = starting_coord
     sand_counter = 0
     while True:
-        new_sand_coords = move_sand(matrix, sand_coords)
+        new_sand_coords = move_sand(matrix, *sand_coords)
         if not min_coord[0] <= new_sand_coords[0] <= max_coord[0] or \
                 not min_coord[1] <= new_sand_coords[1] <= max_coord[1]:
             return sand_counter
@@ -54,20 +49,20 @@ def fill_with_sand(matrix, min_coord, max_coord):
             sand_coords = new_sand_coords
 
 
-def move_sand(matrix, sand_coords):
-    one_down = sand_coords[0], sand_coords[1] + 1
+def move_sand(matrix, x, y):
+    one_down = x, y + 1
     if one_down not in matrix:
         return one_down
     else:
-        one_down_and_left = sand_coords[0] - 1, sand_coords[1] + 1
+        one_down_and_left = x - 1, y + 1
         if one_down_and_left not in matrix:
             return one_down_and_left
         else:
-            one_down_and_right = sand_coords[0] + 1, sand_coords[1] + 1
+            one_down_and_right = x + 1, y + 1
             if one_down_and_right not in matrix:
                 return one_down_and_right
             else:
-                return sand_coords
+                return x, y
 
 
 def get_part1(data):
