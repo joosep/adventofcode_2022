@@ -7,6 +7,7 @@ HEIGHT_ADDED = 4
 def tetris(jets_sequence, rock_count):
     counter = 0
     current_max_height = 0
+    min_height = 10000
     rock_patterns = [
         [(2, 0), (3, 0), (4, 0), (5, 0)],  # -
         [(3, 0), (2, 1), (3, 1), (4, 1), (3, 2)],  # +
@@ -28,7 +29,9 @@ def tetris(jets_sequence, rock_count):
         shape = move_shape(next_value(rock_patterns), 0, current_max_height + HEIGHT_ADDED)
         shape_height = get_max_height(shape)
         counter += 1
-        print(f'rock #{counter}')
+        if counter % 1000 == 0:
+            print(f'rock #{counter}')
+        last_max_height = current_max_height
         while shape_height is not shape_last_height:
             # print_matrix(matrix, current_max_height + HEIGHT_ADDED, shape)
             jet_push = next_value(jets_sequence)
@@ -40,9 +43,14 @@ def tetris(jets_sequence, rock_count):
         current_max_height = max(current_max_height, shape_height)
         letter = chr(random.randint(65, 90))
         for loc in shape:
-            matrix[loc] = letter
-
-    print_matrix(matrix, current_max_height + HEIGHT_ADDED, shape, 30)
+            # matrix[loc] = letter
+            matrix[loc] = "#"
+        if current_max_height > min_height:
+            for y in range(last_max_height - min_height, current_max_height - min_height + 1):
+                for x in range(0, 7):
+                    if (x, y) in matrix:
+                        matrix.pop((x, y))
+    print_matrix(matrix, current_max_height + HEIGHT_ADDED, shape, 300)
     return current_max_height
 
 
@@ -85,6 +93,7 @@ def print_matrix(matrix, max_height, shape=[], max=0):
 
 def get_part1(data):
     jets_sequence = [1 if c == ">" else -1 for c in open(data).read()]
+    return tetris(jets_sequence, 50)
     return tetris(jets_sequence, 2022)
 
 
@@ -93,10 +102,11 @@ def get_part2(data):
     return tetris(jets_sequence, 1000000000000)
 
 
-result = get_part1("test_data")
-assert result == 3068, f"got: {result}"
+#result = get_part1("test_data")
+#assert result == 3068, f"got: {result}"
 result = get_part1("input_data")
 assert result == 3098, f"got: {result}"
+exit()
 
 result = get_part2("test_data")
 assert result == 1514285714288, f"got: \n{result}"
