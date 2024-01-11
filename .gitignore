@@ -1,2 +1,5 @@
 /.idea/
 /*.iml
+
+# ignore input data
+day_*/input_data
